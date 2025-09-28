@@ -1,2 +1,2 @@
-avg_temperature,min_temperature,total_precipitation,city,date
-27.504166666666681,26.7,0.9,Mumbai,2025-09-26
+id,city,max_temp,min_temp,total_precipitation,end_date
+1,Mumbai,28.1°C,27.4°C,32.9 mm,2025-09-27
