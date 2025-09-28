@@ -24,8 +24,11 @@ The pipeline follows this flow (see [architecture.png](architecture.png)):
    - Upload the key to `/opt/airflow/` on the VM.
 3. **Deployment**:
    - Copy `weather_etl_dag.py` to the Airflow DAGs folder (e.g., `/opt/airflow/dags/`).
-   - Start Airflow services (`airflow webserver` and `airflow scheduler`).
-   - Trigger the `weather_etl` DAG via the Airflow UI.
+   - Start Airflow services manually on the VM using the following commands:
+     - `systemctl start airflow-webserver`
+     - `systemctl start airflow-scheduler`
+     - (Optional: Enable services to start on boot with `systemctl enable airflow-webserver` and `systemctl enable airflow-scheduler`.)
+   - Access the Airflow UI (e.g., via `http://<VM-external-IP>:8080`) and trigger the `weather_etl` DAG.
 
 ## Results
 The output is stored in `sample_results.csv` and includes:
