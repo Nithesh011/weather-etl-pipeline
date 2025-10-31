@@ -1,25 +1,39 @@
 # Weather ETL Pipeline — Mumbai (Hourly → BigQuery)
 
-A production-style ETL pipeline that extracts hourly weather data (previous day) for **Mumbai** using Open-Meteo, transforms it with **PySpark** (min / max / avg temperatures, precipitation totals / averages), and loads results into **BigQuery**. The pipeline is orchestrated by **Apache Airflow** inside Docker.
+A production-ready ETL pipeline that extracts hourly weather data (previous day) for **Mumbai** using the **Open-Meteo API**, transforms it with **PySpark** (min/max/avg temperatures and precipitation stats), and loads the processed data into **Google BigQuery**.  
+The workflow is automated and orchestrated using **Apache Airflow** running inside Docker.
 
 ---
 
-## 📂 Contents
-- `dags/` — Airflow DAG (`weather_etl_dag.py`)
-- `etl/` or `scripts/` — extraction, transformation, and load scripts
-  - `scripts/extract/` — API extraction (`extract_api_data.py`)
-  - `scripts/pyspark/` — PySpark transformations (`pyspark_data_clean.py`)
-  - `scripts/bigquery/` — BigQuery upload (`bigquery_data_update.py`)
-- `notebooks/` — experiment notebooks (optional)
-- `config/` — local-only secrets (do **not** commit)
-- `architecture.png` — pipeline diagram
-- `ENVIRONMENT.md` — environment variable reference
-- `requirements.txt` — Python dependencies
-- `Dockerfile` — container image for Airflow runtime
+## 📁 Repository Structure
+
+```
+
+weather-etl-pipeline/
+├── architecture.png                 # Pipeline architecture diagram
+├── dags/
+│   └── weather_data_mumbai_dag.py   # Airflow DAG definition
+├── Dockerfile                       # Container image for Airflow runtime
+├── ENVIRONMENT.md                   # Environment variable and setup reference
+├── notebook/
+│   └── weather_etl_pipeline.ipynb   # Jupyter notebook for experimentation
+├── project_documentation.md         # Detailed project overview and workflow
+├── requirements.txt                 # Python dependencies
+├── sample_result.csv                # Sample output file generated after ETL
+├── scripts/
+│   ├── extract/
+│   │   └── extract_api_data.py      # Data extraction from Open-Meteo API
+│   ├── pyspark/
+│   │   └── pyspark_data_clean.py    # PySpark transformations and aggregations
+│   └── bigquery/
+│       └── bigquery_data_update.py  # Data loading into BigQuery
+└── .gitignore                       # Files and folders excluded from Git
+
+````
 
 ---
 
-## ⚡ Quick Start (Local / Dev)
+## ⚙️ Quick Start (Local / Dev Setup)
 
 1. **Clone the repository**
    ```bash
@@ -27,12 +41,8 @@ A production-style ETL pipeline that extracts hourly weather data (previous day)
    cd weather-etl-pipeline
 ````
 
-2. **Create `.env` file** (see `ENVIRONMENT.md` for details)
-
-   ```bash
-   cp .env.template .env
-   # fill in values (do NOT include service account JSON in repo)
-   ```
+2. **Create and configure environment variables**
+   Refer to `ENVIRONMENT.md` for details on required variables.
 
 3. **Build the Docker image**
 
@@ -53,67 +63,57 @@ A production-style ETL pipeline that extracts hourly weather data (previous day)
      weather-etl-airflow
    ```
 
-5. **Access the Airflow UI**
+5. **Access Airflow UI**
 
    * Open `http://<VM_IP>:8080`
-   * Enable and trigger the `weather_data_mumbai` DAG
+   * Enable and trigger the **`weather_data_mumbai`** DAG
 
 ---
 
 ## 🔐 Environment & Secrets
 
-Do **not commit** service account JSON files.
-Use the `config/` folder locally and ensure `.gitignore` includes:
+* Do **not commit** service account JSON files.
+* Use a local `config/` folder to store credentials.
+* Ensure `.gitignore` includes:
 
-```
-config/*.json
-.env
-```
+  ```
+  config/*.json
+  .env
+  ```
 
-For production, prefer **GCP Secret Manager** or **Airflow Connections** instead of mounting JSON keys directly.
-See `ENVIRONMENT.md` for environment variable details.
+For production, prefer **GCP Secret Manager** or **Airflow Connections** to manage credentials securely.
 
 ---
 
 ## 🧪 Development & Testing
 
 * **Format code:** `black .`
-* **Lint code:** `ruff .` (or `flake8`)
-* **Run tests:** `pytest tests/`
-
-Suggested commands in `Makefile`:
-`make build`, `make test`, `make lint`
+* **Lint code:** `ruff .` or `flake8`
+* **Run tests (if added):** `pytest tests/`
 
 ---
 
-## 🚀 Production Notes
+## 🧱 Architecture Overview
 
-* Use Airflow **Variables / Connections** for GCP credentials and parameters
-* Add **retries** and **SLAs** for tasks; alert on failures (email / Slack)
-* Use **partitioned tables** in BigQuery for daily inserts
-* Prefer appending to BigQuery using `load_table_from_file()` with proper dedup keys
+Refer to `architecture.png` for a visual overview of the ETL workflow:
 
----
+**Extract → Transform → Load → BigQuery**
 
-## 🏗️ Architecture
-
-See `architecture.png` for the pipeline flow:
-**Extract → Transform → Upload → BigQuery**
-
-The diagram shows:
-
-* Raw JSON storage in GCS
-* Transformation via PySpark
-* Final destination: BigQuery
+1. **Extract:** Fetch hourly weather data for Mumbai from Open-Meteo API.
+2. **Transform:** Process raw data with PySpark to compute key metrics.
+3. **Load:** Store the final cleaned and aggregated data in BigQuery.
 
 ---
 
-## 🤝 Contributing
+## 🗂️ Sample Output
 
-1. Fork the repository
-2. Create a branch: `feature/<name>`
-3. Run formatters & tests locally
-4. Commit and open a Pull Request
+A sample of the transformed dataset can be found in `sample_result.csv`.
+
+---
+
+## 🧾 Project Documentation
+
+For a deeper understanding of workflow logic, Airflow DAG structure, and execution details, refer to `project_documentation.md`.
 
 ---
 
@@ -122,6 +122,7 @@ The diagram shows:
 **Nithesh Kumar**
 [LinkedIn Profile](https://www.linkedin.com/in/nithesh11)
 
-````
+```
 
+---
 
