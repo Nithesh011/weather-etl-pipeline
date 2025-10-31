@@ -7,7 +7,6 @@ The workflow is automated and orchestrated using **Apache Airflow** running insi
 
 ## 📁 Repository Structure
 
-```
 
 weather-etl-pipeline/
 ├── architecture.png                 # Pipeline architecture diagram
