@@ -1,4 +1,4 @@
-cat > ENVIRONMENT.md <<'EOF'
+
 # Environment variables - how to set and where used
 
 ## Required environment variables (for Docker runtime)
