@@ -1,8 +1,3 @@
----
-
-### ✅ Corrected `README.md` (final version to replace your current one)
-
-````markdown
 # Weather ETL Pipeline — Mumbai (Hourly → BigQuery)
 
 A production-style ETL pipeline that extracts hourly weather data (previous day) for **Mumbai** using Open-Meteo, transforms it with **PySpark** (min / max / avg temperatures, precipitation totals / averages), and loads results into **BigQuery**. The pipeline is orchestrated by **Apache Airflow** inside Docker.
