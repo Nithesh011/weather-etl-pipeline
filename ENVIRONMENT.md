@@ -33,4 +33,3 @@ os.environ["GCP_KEY_PATH"] = "/content/config/<KEY>.json"
 os.environ["GCP_BUCKET_NAME"] = "raw_weather_data_backup"
 os.environ["GCP_PROJECT_ID"] = "my-project"
 os.environ["DATA_PATH"] = "/content"
-EOF
