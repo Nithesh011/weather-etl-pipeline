@@ -16,7 +16,6 @@ A production-style ETL pipeline that extracts hourly weather data (previous day)
 - `ENVIRONMENT.md` — environment variable reference
 - `requirements.txt` — Python dependencies
 - `Dockerfile` — container image for Airflow runtime
-- `requirements_and_failures.md` — troubleshooting notes and package issues
 
 ---
 
@@ -123,7 +122,6 @@ The diagram shows:
 **Nithesh Kumar**
 [LinkedIn Profile](https://www.linkedin.com/in/nithesh11)
 
-```
+````
 
----
 
