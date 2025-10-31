@@ -90,7 +90,7 @@ For production, prefer **GCP Secret Manager** or **Airflow Connections** to mana
 
 ## 🧱 Architecture Overview
 
-Refer to `[architecture.png](architecture.png)` for a visual overview of the ETL workflow:
+Refer to [architecture.png](architecture.png) for a visual overview of the ETL workflow:
 
 **Extract → Transform → Load → BigQuery**
 
@@ -108,7 +108,7 @@ A sample of the transformed dataset can be found in `sample_result.csv`.
 
 ## 🧾 Project Documentation
 
-For a deeper understanding of workflow logic, Airflow DAG structure, and execution details, refer to `[project_documentation.md](project_documentation.md) `.
+For a deeper understanding of workflow logic, Airflow DAG structure, and execution details, refer to [project_documentation.md](project_documentation.md) .
 
 ---
 
