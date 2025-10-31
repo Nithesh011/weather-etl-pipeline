@@ -102,7 +102,7 @@ Refer to [architecture.png](architecture.png) for a visual overview of the ETL w
 
 ## 🗂️ Sample Output
 
-A sample of the transformed dataset can be found in `sample_result.csv`.
+A sample of the transformed dataset can be found in [sample_result.csvd](sample_result.csv).
 
 ---
 
