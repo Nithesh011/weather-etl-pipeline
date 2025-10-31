@@ -1,145 +1,134 @@
+---
 
-# Weather ETL Pipeline
+### ✅ Corrected `README.md` (final version to replace your current one)
 
-**Short summary**  
-A production-style ETL pipeline that extracts hourly weather data (previous day) for Mumbai from Open-Meteo, transforms it with PySpark (min/max/avg temperatures, total & avg precipitation), and loads results into BigQuery. The pipeline is orchestrated by Apache Airflow running in a Docker container.
+````markdown
+# Weather ETL Pipeline — Mumbai (Hourly → BigQuery)
+
+A production-style ETL pipeline that extracts hourly weather data (previous day) for **Mumbai** using Open-Meteo, transforms it with **PySpark** (min / max / avg temperatures, precipitation totals / averages), and loads results into **BigQuery**. The pipeline is orchestrated by **Apache Airflow** inside Docker.
 
 ---
 
-## Repository structure
-
-.
-├── Dockerfile
-├── requirements.txt
-├── README.md
-├── requirements_and_failures.md
-├── architecture.png
-├── project_documentation.md
-├── dags/
-│ └── weather_etl_dag.py
-├── scripts/
-│ ├── extract/
-│ │ └── extract_api_data.py
-│ ├── pyspark/
-│ │ └── pyspark_data_clean.py
-│ └── bigquery/
-│ └── bigquery_data_update.py
-├── config/ # STORE KEYS LOCALLY (do NOT commit)
-└── notebooks/ # optional: experiment notebooks (archival)
-
-yaml
-Copy code
+## 📂 Contents
+- `dags/` — Airflow DAG (`weather_etl_dag.py`)
+- `etl/` or `scripts/` — extraction, transformation, and load scripts
+  - `scripts/extract/` — API extraction (`extract_api_data.py`)
+  - `scripts/pyspark/` — PySpark transformations (`pyspark_data_clean.py`)
+  - `scripts/bigquery/` — BigQuery upload (`bigquery_data_update.py`)
+- `notebooks/` — experiment notebooks (optional)
+- `config/` — local-only secrets (do **not** commit)
+- `architecture.png` — pipeline diagram
+- `ENVIRONMENT.md` — environment variable reference
+- `requirements.txt` — Python dependencies
+- `Dockerfile` — container image for Airflow runtime
+- `requirements_and_failures.md` — troubleshooting notes and package issues
 
 ---
 
-## Quick start (development, on your GCP VM)
+## ⚡ Quick Start (Local / Dev)
 
-> **Important:** Do not commit your service account JSON. Place it under `config/` locally and ensure `.gitignore` prevents accidental commits.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Nithesh011/weather-etl-pipeline.git
+   cd weather-etl-pipeline
+````
 
-1. Build the Docker image (from repo root):
-```bash
-sudo docker build -t weather-etl-airflow .
-Run the container (example — replace placeholders):
+2. **Create `.env` file** (see `ENVIRONMENT.md` for details)
 
-bash
-Copy code
-sudo docker run -d --name weather_airflow -p 8080:8080 \
-  -e GCP_KEY_PATH=/opt/airflow/config/<YOUR_KEY>.json \
-  -e GCP_BUCKET_NAME=<YOUR_BUCKET> \
-  -e GCP_PROJECT_ID=<YOUR_PROJECT_ID> \
-  -e DATA_PATH=/opt/airflow/scripts \
-  -v /home/<YOUR_USER>/weather-etl-pipeline:/opt/airflow:rw \
-  -v /home/<YOUR_USER>/weather-etl-pipeline/config/<YOUR_KEY>.json:/opt/airflow/config/<YOUR_KEY>.json:ro \
-  weather-etl-airflow
-Open Airflow UI:
+   ```bash
+   cp .env.template .env
+   # fill in values (do NOT include service account JSON in repo)
+   ```
 
-cpp
-Copy code
-http://<VM_IP>:8080
-Login with the admin user you created (admin / admin or whichever you set).
+3. **Build the Docker image**
 
-Enable and trigger the weather_data_mumbai DAG.
+   ```bash
+   docker build -t weather-etl-airflow .
+   ```
 
-Environment & config
-Config folder
+4. **Run the container**
 
-Create a config/ folder locally and put your service-account JSON there.
+   ```bash
+   docker run -d --name weather_airflow -p 8080:8080 \
+     -e GCP_KEY_PATH=/opt/airflow/config/<KEY>.json \
+     -e GCP_BUCKET_NAME=<YOUR_BUCKET> \
+     -e GCP_PROJECT_ID=<YOUR_PROJECT_ID> \
+     -e DATA_PATH=/opt/airflow/scripts \
+     -v $(pwd):/opt/airflow:rw \
+     -v $(pwd)/config/<KEY>.json:/opt/airflow/config/<KEY>.json:ro \
+     weather-etl-airflow
+   ```
 
-Do not commit the JSON to GitHub.
+5. **Access the Airflow UI**
 
-Environment variables used
-
-GCP_KEY_PATH: path inside container to service JSON (e.g. /opt/airflow/config/key.json)
-
-GCP_BUCKET_NAME: GCS bucket for raw JSON
-
-GCP_PROJECT_ID: GCP project id
-
-DATA_PATH: path inside container where scripts read/write (default /opt/airflow/scripts)
-
-Pass these using -e when running docker run. See run command above.
-
-Contact / Author
-Nithesh Kumar
-EOF
-
-yaml
-Copy code
+   * Open `http://<VM_IP>:8080`
+   * Enable and trigger the `weather_data_mumbai` DAG
 
 ---
 
-### 2) Create/overwrite `.gitignore`
-```bash
-cat > .gitignore <<'EOF'
-# Ignore keys and environment
+## 🔐 Environment & Secrets
+
+Do **not commit** service account JSON files.
+Use the `config/` folder locally and ensure `.gitignore` includes:
+
+```
 config/*.json
 .env
-.venv/
-__pycache__/
-*.pyc
-.DS_Store
+```
 
-# Airflow local files
-airflow-webserver.log
-airflow-webserver.err
-airflow.db
-EOF
-3) Create ENVIRONMENT.md (explains env vars)
-bash
-Copy code
-cat > ENVIRONMENT.md <<'EOF'
-# Environment variables - how to set and where used
+For production, prefer **GCP Secret Manager** or **Airflow Connections** instead of mounting JSON keys directly.
+See `ENVIRONMENT.md` for environment variable details.
 
-## Required environment variables (for Docker runtime)
+---
 
-- GCP_KEY_PATH — Absolute path inside container where service account JSON is mounted.
-  Example: /opt/airflow/config/subtle-seer-...json
+## 🧪 Development & Testing
 
-- GCP_BUCKET_NAME — GCS bucket used for raw JSON uploads.
-  Example: raw_weather_data_backup
+* **Format code:** `black .`
+* **Lint code:** `ruff .` (or `flake8`)
+* **Run tests:** `pytest tests/`
 
-- GCP_PROJECT_ID — GCP project id for BigQuery.
-  Example: subtle-seer-472708-q3
+Suggested commands in `Makefile`:
+`make build`, `make test`, `make lint`
 
-- DATA_PATH — Shared folder path for JSON & CSV inside container; scripts read/write here.
-  Example: /opt/airflow/scripts
+---
 
-## How to pass with docker run
-Example:
-docker run -d --name weather_airflow -p 8080:8080 \
-  -e GCP_KEY_PATH=/opt/airflow/config/<KEY>.json \
-  -e GCP_BUCKET_NAME=raw_weather_data_backup \
-  -e GCP_PROJECT_ID=subtle-seer-... \
-  -e DATA_PATH=/opt/airflow/scripts \
-  -v /home/<user>/weather-etl-pipeline:/opt/airflow:rw \
-  -v /home/<user>/weather-etl-pipeline/config/<key>.json:/opt/airflow/config/<key>.json:ro \
-  weather-etl-airflow
+## 🚀 Production Notes
 
-## Local / Colab testing
-In Colab or local Python, set with os.environ[...] like:
-import os
-os.environ["GCP_KEY_PATH"] = "/content/config/<KEY>.json"
-os.environ["GCP_BUCKET_NAME"] = "raw_weather_data_backup"
-os.environ["GCP_PROJECT_ID"] = "my-project"
-os.environ["DATA_PATH"] = "/content"
+* Use Airflow **Variables / Connections** for GCP credentials and parameters
+* Add **retries** and **SLAs** for tasks; alert on failures (email / Slack)
+* Use **partitioned tables** in BigQuery for daily inserts
+* Prefer appending to BigQuery using `load_table_from_file()` with proper dedup keys
+
+---
+
+## 🏗️ Architecture
+
+See `architecture.png` for the pipeline flow:
+**Extract → Transform → Upload → BigQuery**
+
+The diagram shows:
+
+* Raw JSON storage in GCS
+* Transformation via PySpark
+* Final destination: BigQuery
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a branch: `feature/<name>`
+3. Run formatters & tests locally
+4. Commit and open a Pull Request
+
+---
+
+## 📬 Contact
+
+**Nithesh Kumar**
+[LinkedIn Profile](https://www.linkedin.com/in/nithesh11)
+
+```
+
+---
 
