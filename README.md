@@ -40,7 +40,7 @@ weather-etl-pipeline/
    ```
 
 2. **Create and configure environment variables**
-   Refer to `ENVIRONMENT.md` for details on required variables.
+   Refer to [project_documentation.md](project_documentation.md)  for details on required variables.
 
 3. **Build the Docker image**
    ```bash
