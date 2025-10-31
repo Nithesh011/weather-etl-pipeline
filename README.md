@@ -34,6 +34,7 @@ weather-etl-pipeline/
 ---
 
 ## ⚙️ Quick Start (Local / Dev Setup)
+```
 
 1. **Clone the repository**
    ```bash
@@ -45,13 +46,11 @@ weather-etl-pipeline/
    Refer to `ENVIRONMENT.md` for details on required variables.
 
 3. **Build the Docker image**
-
    ```bash
    docker build -t weather-etl-airflow .
 ````
 
 4. **Run the container**
-
    ```bash
    docker run -d --name weather_airflow -p 8080:8080 \
      -e GCP_KEY_PATH=/opt/airflow/config/<KEY>.json \
@@ -64,7 +63,6 @@ weather-etl-pipeline/
  ````
 
 5. **Access Airflow UI**
-
    * Open `http://<VM_IP>:8080`
    * Enable and trigger the **`weather_data_mumbai`** DAG
 ````
