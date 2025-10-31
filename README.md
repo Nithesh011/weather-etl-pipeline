@@ -48,7 +48,7 @@ weather-etl-pipeline/
 
    ```bash
    docker build -t weather-etl-airflow .
-   ```
+````
 
 4. **Run the container**
 
@@ -61,13 +61,13 @@ weather-etl-pipeline/
      -v $(pwd):/opt/airflow:rw \
      -v $(pwd)/config/<KEY>.json:/opt/airflow/config/<KEY>.json:ro \
      weather-etl-airflow
-   ```
+ ````
 
 5. **Access Airflow UI**
 
    * Open `http://<VM_IP>:8080`
    * Enable and trigger the **`weather_data_mumbai`** DAG
-
+````
 ---
 
 ## 🔐 Environment & Secrets
@@ -79,7 +79,7 @@ weather-etl-pipeline/
   ```
   config/*.json
   .env
-  ```
+````
 
 For production, prefer **GCP Secret Manager** or **Airflow Connections** to manage credentials securely.
 
