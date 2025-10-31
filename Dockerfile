@@ -1,4 +1,3 @@
-cat > Dockerfile <<'EOF'
 # -------------------------------
 # Base image with Python + Airflow
 # -------------------------------
@@ -39,5 +38,3 @@ ENV DATA_PATH=/opt/airflow/scripts
 # Default command
 ENTRYPOINT ["airflow"]
 CMD ["standalone"]
-
-EOF

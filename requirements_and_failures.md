@@ -1,4 +1,4 @@
-cat > requirements_and_failures.md <<'EOF'
+
 # Build failures & fixes (project log)
 
 ## 1) pip as root warning
@@ -33,5 +33,4 @@ cat > requirements_and_failures.md <<'EOF'
 - Docker image built successfully.
 - Airflow container runs.
 - DAG weather_data_mumbai runs extract → transform → load successfully.
-EOF
-
+  
