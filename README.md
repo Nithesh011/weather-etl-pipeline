@@ -80,14 +80,6 @@ For production, prefer **GCP Secret Manager** or **Airflow Connections** to mana
 
 ---
 
-## 🧪 Development & Testing
-
-* **Format code:** `black .`
-* **Lint code:** `ruff .` or `flake8`
-* **Run tests (if added):** `pytest tests/`
-
----
-
 ## 🧱 Architecture Overview
 
 Refer to [architecture.png](architecture.png) for a visual overview of the ETL workflow:
