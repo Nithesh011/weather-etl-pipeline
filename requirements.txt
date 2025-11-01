@@ -1,8 +1,7 @@
-cat > requirements.txt <<'EOF'
 apache-airflow==2.9.1
 pyspark==3.5.1
 google-cloud-storage
 google-cloud-bigquery
 requests
-EOF
+
 
